@@ -55,20 +55,12 @@ export const CITIES: CityEntry[] = [
   { cityCode: "13123", slug: "edogawa", label: "Edogawa", labelJa: "江戸川区", region: "tokyo23", center: [139.8683, 35.7066], zoom: 12 },
 
   // Kanto (outside Tokyo 23)
-  { cityCode: "14100", slug: "yokohama", label: "Yokohama", labelJa: "横浜市", region: "kanto", center: [139.6380, 35.4437], zoom: 11 },
   { cityCode: "14204", slug: "kamakura", label: "Kamakura", labelJa: "鎌倉市", region: "kanto", center: [139.5510, 35.3192], zoom: 13 },
 
-  // Kansai
-  { cityCode: "27100", slug: "osaka", label: "Osaka", labelJa: "大阪市", region: "kansai", center: [135.5023, 34.6937], zoom: 11 },
-
-  // Chubu
-  { cityCode: "23100", slug: "nagoya", label: "Nagoya", labelJa: "名古屋市", region: "chubu", center: [136.9066, 35.1815], zoom: 11 },
-
-  // Kyushu
-  { cityCode: "40130", slug: "fukuoka", label: "Fukuoka", labelJa: "福岡市", region: "kyushu", center: [130.4017, 33.5904], zoom: 11 },
-
-  // Hokkaido
-  { cityCode: "01100", slug: "sapporo", label: "Sapporo", labelJa: "札幌市", region: "hokkaido", center: [141.3545, 43.0621], zoom: 11 },
+  // Yokohama, Osaka, Nagoya, Fukuoka, Sapporo are produced by plateau-core
+  // but not yet uploaded to the production artifacts origin. To add a city:
+  //   1. Upload its artifacts to R2 (see docs/DEPLOYMENT.md)
+  //   2. Add an entry below mirroring the existing ones
 ];
 
 export function findCity(cityCode: string): CityEntry | null {

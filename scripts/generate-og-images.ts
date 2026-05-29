@@ -27,7 +27,6 @@ const CITIES: City[] = [
   { slug: "edogawa", label: "Edogawa", hazards: ["River flood", "Tsunami"] },
   { slug: "koto", label: "Koto", hazards: ["Storm surge", "Tsunami"] },
   { slug: "kamakura", label: "Kamakura", hazards: ["Tsunami", "Landslide"] },
-  { slug: "osaka", label: "Osaka", hazards: ["River flood"] },
 ];
 
 const BASE_URL = process.env.OG_BASE_URL ?? "http://localhost:5173";
