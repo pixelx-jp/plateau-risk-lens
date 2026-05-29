@@ -5,8 +5,9 @@ node_modules
 dist
 *.tsbuildinfo
 
-# Test artifacts
-coverage
+# Test artifacts. Anchor `coverage` to repo root so it doesn't also match
+# src/coverage/ (which is real source for the CoverageMeter module).
+/coverage
 playwright-report
 test-results
 
