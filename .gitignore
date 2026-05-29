@@ -38,6 +38,24 @@ Thumbs.db
 *.swp
 *.swo
 
+# AI assistant / agent local state — must NEVER be public. These directories
+# can contain conversation history, internal prompts, project-specific
+# memory, or credentials. Treat them like .env.
+.claude
+.claude/
+CLAUDE.md
+.cursor
+.cursorrules
+.cursorignore
+.aider*
+.continue
+.codex
+.windsurf
+.copilot
+.gpt
+AGENTS.md
+.specstory
+
 # Logs
 *.log
 npm-debug.log*
