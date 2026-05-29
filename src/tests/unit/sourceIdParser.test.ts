@@ -20,4 +20,22 @@ describe("parseSourceIds", () => {
   it("drops empty segments", () => {
     expect(parseSourceIds("src1,,src2,")).toEqual(["src1", "src2"]);
   });
+
+  it("strips +confidence suffix from each entry", () => {
+    // Real plateau-core data: coverage_source_ids may embed the confidence
+    // value as a `+suffix` per entry.
+    expect(
+      parseSourceIds(
+        "plateau-13113-shibuya-ku-2023-fld+inundation_bounded",
+      ),
+    ).toEqual(["plateau-13113-shibuya-ku-2023-fld"]);
+    expect(
+      parseSourceIds(
+        "plateau-13113-shibuya-ku-2023-fld+inundation_bounded,plateau-13113-shibuya-ku-2023-fld2+explicit_polygon",
+      ),
+    ).toEqual([
+      "plateau-13113-shibuya-ku-2023-fld",
+      "plateau-13113-shibuya-ku-2023-fld2",
+    ]);
+  });
 });
