@@ -19,11 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-The MIT license above covers the source code in this repository. Data
-visualized by deployments of this software (PMTiles, FlatGeobuf, manifest
-files derived from Project PLATEAU) is published by 国土交通省 (MLIT) under
-CC BY 4.0. See <https://www.mlit.go.jp/plateau/> for details and citation
-requirements.
