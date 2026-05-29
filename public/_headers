@@ -1,0 +1,17 @@
+/*.pmtiles
+  Access-Control-Allow-Origin: *
+  Accept-Ranges: bytes
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.fgb
+  Access-Control-Allow-Origin: *
+  Accept-Ranges: bytes
+  Cache-Control: public, max-age=31536000, immutable
+
+/manifest.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+
+/artifacts/*
+  Access-Control-Allow-Origin: *
+  Accept-Ranges: bytes

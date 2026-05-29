@@ -1,0 +1,47 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+*.tsbuildinfo
+
+# Test artifacts
+coverage
+playwright-report
+test-results
+
+# Local data
+# `.artifacts/` holds bundles downloaded by scripts/fetch-artifacts.sh; too
+# large for git and intentionally excluded from the SPA build (artifacts
+# always live on a separate origin in production).
+.artifacts
+# Legacy location (removed): kept ignored in case an older checkout still has it.
+public/artifacts
+
+# Environment / local config
+.env
+.env.*
+!.env.example
+
+# Vite / dev caches
+.vite
+.cache
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Wrangler local state (Cloudflare CLI)
+.wrangler

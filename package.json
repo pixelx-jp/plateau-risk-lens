@@ -1,0 +1,57 @@
+{
+  "name": "plateau-risk-lens",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Static, citable disaster-risk explainer for Japan's PLATEAU open data.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://yodolabs.jp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pixelx-jp/plateau-risk-lens.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pixelx-jp/plateau-risk-lens/issues"
+  },
+  "author": {
+    "name": "Yodo Labs (PixelX Inc.)",
+    "email": "pan@yodolabs.jp",
+    "url": "https://yodolabs.jp"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install --with-deps chromium firefox webkit",
+    "og:generate": "tsx scripts/generate-og-images.ts",
+    "artifacts:fetch": "scripts/fetch-artifacts.sh",
+    "artifacts:inject-fgb": "tsx scripts/inject-fgb-index.ts",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "flatgeobuf": "^3.36.0",
+    "maplibre-gl": "^5.0.0",
+    "pmtiles": "^4.3.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.1",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "playwright": "^1.60.0",
+    "pngjs": "^7.0.0",
+    "sharp": "^0.34.5",
+    "tsx": "^4.22.3",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5",
+    "vitest": "^3.2.4"
+  }
+}

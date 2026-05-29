@@ -1,0 +1,67 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  deployments: write
+  pull-requests: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Cloudflare Pages
+    runs-on: ubuntu-latest
+    # Skip if the maintainer hasn't yet configured the Cloudflare secrets.
+    # First run of the workflow on a fork will no-op until secrets are set.
+    if: ${{ vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' || github.repository_owner != github.actor }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          # Artifacts live on a separate origin (R2 / S3 / etc). The default
+          # falls back to same-origin /artifacts which is rarely what
+          # production wants; override via repo variable.
+          VITE_ARTIFACT_BASE_ROOT: ${{ vars.VITE_ARTIFACT_BASE_ROOT || '/artifacts' }}
+          VITE_DEFAULT_CITY_SLUG: ${{ vars.VITE_DEFAULT_CITY_SLUG || 'shibuya' }}
+        run: npm run build
+
+      - name: Publish to Cloudflare Pages
+        id: cf
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy dist
+            --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME || 'plateau-risk-lens' }}
+            --branch=${{ github.head_ref || github.ref_name }}
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request' && steps.cf.outputs.deployment-url
+        uses: thollander/actions-comment-pull-request@v3
+        with:
+          message: |
+            🌐 **Preview deploy:** ${{ steps.cf.outputs.deployment-url }}
+
+            Honesty checks to eyeball on the preview:
+            - Toggle inland_flood in Shibuya — no buildings should be green
+            - Open a building's property card — coverage sources and risk sources should be in separate lists
+            - Export a PNG — attribution, dataset year, and disclaimer should all be visible
+          comment-tag: preview-deploy
