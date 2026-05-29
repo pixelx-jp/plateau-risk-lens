@@ -19,9 +19,10 @@ jobs:
   deploy:
     name: Cloudflare Pages
     runs-on: ubuntu-latest
-    # Skip if the maintainer hasn't yet configured the Cloudflare secrets.
-    # First run of the workflow on a fork will no-op until secrets are set.
-    if: ${{ vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' || github.repository_owner != github.actor }}
+    # Only deploy when the maintainer has explicitly opted in by setting
+    # the CLOUDFLARE_DEPLOY_ENABLED repo variable to "true" AND the
+    # required secrets are configured. Forks and fresh checkouts skip.
+    if: ${{ vars.CLOUDFLARE_DEPLOY_ENABLED == 'true' }}
     steps:
       - uses: actions/checkout@v4
 
