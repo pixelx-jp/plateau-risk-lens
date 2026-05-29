@@ -27,12 +27,17 @@ const TRUSTED_CONFIDENCE: ReadonlySet<CoverageConfidence> = new Set([
   "inundation_bounded",
 ]);
 
-export function isTrustedConfidence(value: CoverageConfidence | null): boolean {
+export function isTrustedConfidence(
+  value: CoverageConfidence | null | undefined,
+): boolean {
+  // undefined = property not present on the feature (PMTiles strips it via
+  // tippecanoe's -y allowlist; see HazardField doc). Trust the covered verdict.
+  if (value === undefined) return true;
   if (value === null) return false;
   return TRUSTED_CONFIDENCE.has(value);
 }
 
-function isLowConfidence(value: CoverageConfidence | null): boolean {
+function isLowConfidence(value: CoverageConfidence | null | undefined): boolean {
   return !isTrustedConfidence(value);
 }
 
@@ -47,11 +52,13 @@ export function extractHazardField(
   const hitSourceIds = parseSourceIds(
     props[`${key}_hit_source_ids` as keyof FeatureProps],
   );
+  // Preserve undefined-vs-null distinction; isTrustedConfidence relies on it.
+  const rawConfidence =
+    props[`${key}_coverage_confidence` as keyof FeatureProps];
   const coverageConfidence =
-    (props[`${key}_coverage_confidence` as keyof FeatureProps] as
-      | CoverageConfidence
-      | null
-      | undefined) ?? null;
+    rawConfidence === undefined
+      ? undefined
+      : (rawConfidence as CoverageConfidence | null);
 
   let depthMax: number | null = null;
   let inZone: boolean | null = null;

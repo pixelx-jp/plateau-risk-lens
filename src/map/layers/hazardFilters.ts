@@ -41,17 +41,21 @@ export function coveredTrueFilter(key: HazardKey): ExpressionSpecification {
 }
 
 /**
- * "Known" = covered=true AND confidence is in the trusted allowlist. Any
- * other value (null, missing, "unknown", or a pipeline typo) falls into
- * the low-confidence bucket.
+ * "Known" = covered=true AND (confidence MISSING from the feature OR
+ * confidence is in the trusted allowlist).
+ *
+ * Missing-confidence is treated as trusted because plateau-core's tippecanoe
+ * encoder strips `*_coverage_confidence` from PMTiles for size (see
+ * HazardField doc in src/types/hazard.ts). The full confidence is available
+ * in parquet/FGB; only the MVT-derived features have it stripped.
  */
 export function knownConfidenceFilter(key: HazardKey): ExpressionSpecification {
   return [
     "all",
     coveredTrueFilter(key),
-    ["has", `${key}_coverage_confidence`],
     [
       "any",
+      ["!", ["has", `${key}_coverage_confidence`]],
       ...TRUSTED_CONFIDENCES.map(
         (v) =>
           ["==", ["get", `${key}_coverage_confidence`], v] as ExpressionSpecification,
@@ -60,21 +64,22 @@ export function knownConfidenceFilter(key: HazardKey): ExpressionSpecification {
   ];
 }
 
-/** Low-confidence = covered=true AND confidence not trusted (incl. null/missing/typo). */
+/**
+ * Low-confidence = covered=true AND the confidence field is PRESENT but
+ * not in the trusted allowlist (e.g. "unknown", a typo, a new enum value).
+ * If the field is absent we trust covered (see knownConfidenceFilter doc).
+ */
 export function unknownConfidenceFilter(key: HazardKey): ExpressionSpecification {
   return [
     "all",
     coveredTrueFilter(key),
+    ["has", `${key}_coverage_confidence`],
     [
-      "any",
-      ["!", ["has", `${key}_coverage_confidence`]],
-      [
-        "all",
-        ...TRUSTED_CONFIDENCES.map(
-          (v) =>
-            ["!=", ["get", `${key}_coverage_confidence`], v] as ExpressionSpecification,
-        ),
-      ],
+      "all",
+      ...TRUSTED_CONFIDENCES.map(
+        (v) =>
+          ["!=", ["get", `${key}_coverage_confidence`], v] as ExpressionSpecification,
+      ),
     ],
   ];
 }

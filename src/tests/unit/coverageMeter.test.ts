@@ -93,10 +93,23 @@ describe("CoverageMeter.getViewportCoverage", () => {
     expect(v.yearKnown).toBe(0);
   });
 
-  it("missing coverage_confidence is bucketed as low_confidence (matches classifier)", () => {
+  it("missing confidence (PMTiles-stripped) is bucketed as covered", () => {
+    // tippecanoe strips *_coverage_confidence to save MVT bytes; the SPA
+    // treats absence as "trust the covered verdict" because the pipeline
+    // still computed it from the same polygons. See HazardField doc.
     const features = [
-      // covered=true but confidence missing → low_confidence per classifier.
       { properties: { building_uid: "D", river_flood_covered: true } },
+    ];
+    const reg = new ManifestRegistry(fakeManifest());
+    const meter = new CoverageMeter(fakeMap(features), reg);
+    const v = meter.getViewportCoverage(["x"]);
+    expect(v.perHazard.river_flood.covered).toBe(1);
+    expect(v.perHazard.river_flood.lowConfidence).toBe(0);
+  });
+
+  it("explicit null confidence is bucketed as low_confidence", () => {
+    const features = [
+      { properties: { building_uid: "E", river_flood_covered: true, river_flood_coverage_confidence: null } },
     ];
     const reg = new ManifestRegistry(fakeManifest());
     const meter = new CoverageMeter(fakeMap(features), reg);

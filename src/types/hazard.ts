@@ -30,7 +30,27 @@ export interface HazardField {
   key: HazardKey;
   covered: boolean;
   coverageSourceIds: string[];
-  coverageConfidence: CoverageConfidence | null;
+  /**
+   * `undefined` here is load-bearing and distinct from `null`:
+   *
+   *   - `undefined` → the property was not present on the source feature.
+   *     This happens systematically when reading from PMTiles, because
+   *     plateau-core's tippecanoe encoder strips `*_coverage_confidence` to
+   *     keep MVT tile size down (see DEFAULT_PMTILES_PROPERTIES in
+   *     plateau-core/.../ops/pmtiles.py). When the property is absent we
+   *     trust the `covered` verdict — the pipeline computed it from the same
+   *     polygons that produced the confidence value.
+   *
+   *   - `null` → the property was present but explicitly null. This is what
+   *     the pipeline writes when it could not determine the verdict (e.g.
+   *     building outside any survey extent), and means low confidence.
+   *
+   *   - string value → check against the trusted allowlist.
+   *
+   * FGB exports keep the full confidence string, so this distinction is
+   * only meaningful for PMTiles-derived features.
+   */
+  coverageConfidence: CoverageConfidence | null | undefined;
   depthMax: number | null;
   inZone: boolean | null;
   hitSourceIds: string[];

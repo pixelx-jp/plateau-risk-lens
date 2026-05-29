@@ -104,14 +104,36 @@ describe("classifyHazard — honesty invariants", () => {
     expect(classifyHazard(extractHazardField(f, "river_flood"))).toBe("safe");
   });
 
-  it("coverage_confidence=null treated as low_confidence, not safe", () => {
+  it("coverage_confidence explicitly null is low_confidence, not safe", () => {
     const f: FeatureProps = {
       ...empty,
       river_flood_covered: true,
-      // confidence intentionally omitted (null/undefined)
+      river_flood_coverage_confidence: null,
       river_flood_depth_max: null,
     };
     expect(classifyHazard(extractHazardField(f, "river_flood"))).toBe("low_confidence");
+  });
+
+  it("coverage_confidence MISSING (PMTiles-stripped) trusts the covered verdict", () => {
+    // tippecanoe omits *_coverage_confidence to keep MVT tile size down. When
+    // the property key is absent (not just null), we trust covered=true and
+    // render the depth band. See HazardField.coverageConfidence doc.
+    const f: FeatureProps = {
+      ...empty,
+      river_flood_covered: true,
+      // river_flood_coverage_confidence intentionally absent
+      river_flood_depth_max: 1.5,
+    };
+    expect(classifyHazard(extractHazardField(f, "river_flood"))).toBe("risk_depth");
+  });
+
+  it("missing confidence + missing depth still resolves to safe (not low)", () => {
+    const f: FeatureProps = {
+      ...empty,
+      river_flood_covered: true,
+      // both confidence and depth_max stripped by PMTiles
+    };
+    expect(classifyHazard(extractHazardField(f, "river_flood"))).toBe("safe");
   });
 
   it("inundation_bounded is treated as known (not low_confidence)", () => {
