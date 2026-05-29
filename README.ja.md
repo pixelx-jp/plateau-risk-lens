@@ -18,6 +18,8 @@
 </p>
 
 <p align="center">
+  <a href="https://risk-lens.plateau.yodolabs.jp"><strong>🌐 ライブデモ →</strong></a>
+  &nbsp;·&nbsp;
   <a href="./README.md">English README →</a>
 </p>
 
