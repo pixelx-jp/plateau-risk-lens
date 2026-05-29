@@ -1,0 +1,39 @@
+# Labels used by issue templates + PR triage. Apply via:
+#   gh label create --file .github/labels.yml
+# or manually in repo Settings → Labels.
+
+- name: bug
+  color: "d73a4a"
+  description: Something renders incorrectly or misleads about hazard data
+
+- name: enhancement
+  color: "a2eeef"
+  description: A capability the project should have
+
+- name: documentation
+  color: "0075ca"
+  description: Docs, README, design notes
+
+- name: good first issue
+  color: "7057ff"
+  description: Beginner-friendly contribution
+
+- name: help wanted
+  color: "008672"
+  description: Extra attention needed
+
+- name: honesty-invariant
+  color: "b71c1c"
+  description: Touches the covered=false / unknown / safe rendering rules
+
+- name: i18n
+  color: "ffeb3b"
+  description: ja / en string and locale handling
+
+- name: data-pipeline
+  color: "ff9800"
+  description: Issues with plateau-core artifacts (PMTiles / FGB / manifest)
+
+- name: maintainers-only
+  color: "888888"
+  description: Requires Cloudflare / deploy access
