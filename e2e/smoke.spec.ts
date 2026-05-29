@@ -25,7 +25,18 @@ test("app boots and renders the map header", async ({ page }) => {
 test("language toggle switches to Japanese", async ({ page }) => {
   await page.goto("/");
 
-  // Skip if manifest didn't load (artifact symlinks absent in this run).
+  // Wait for the manifest fetch to resolve either way before checking, so
+  // browsers with slower network resolution (e.g. WebKit in CI) don't race
+  // ahead of the SPA's initial state.
+  await Promise.race([
+    page
+      .getByText(/Failed to load manifest/)
+      .waitFor({ state: "visible", timeout: 20_000 }),
+    page
+      .locator("canvas.maplibregl-canvas")
+      .waitFor({ state: "visible", timeout: 20_000 }),
+  ]).catch(() => undefined);
+
   const errorBanner = page.getByText(/Failed to load manifest/);
   if (await errorBanner.isVisible().catch(() => false)) {
     test.skip(true, "manifest not available — symlink artifacts to enable");

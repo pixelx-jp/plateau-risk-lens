@@ -13,6 +13,18 @@ import { PNG } from "pngjs";
 test.describe("no-data must never be green", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
+    // Race: manifest fetch either succeeds (canvas appears) or fails (error
+    // banner appears). Without this wait, WebKit could check `isVisible`
+    // before the fetch resolved and incorrectly proceed into the test body
+    // while the SPA was still loading.
+    await Promise.race([
+      page
+        .getByText(/Failed to load manifest/)
+        .waitFor({ state: "visible", timeout: 20_000 }),
+      page
+        .locator("canvas.maplibregl-canvas")
+        .waitFor({ state: "visible", timeout: 20_000 }),
+    ]).catch(() => undefined);
     const errorBanner = page.getByText(/Failed to load manifest/);
     if (await errorBanner.isVisible().catch(() => false)) {
       test.skip(true, "manifest not available — symlink artifacts to enable");
