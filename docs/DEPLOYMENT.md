@@ -33,7 +33,7 @@ In the GitHub repo, **Settings → Secrets and variables → Actions**:
 **Variables:**
 - `CLOUDFLARE_DEPLOY_ENABLED = true` — gate flag the workflow checks
 - `CLOUDFLARE_PROJECT_NAME = plateau-risk-lens` (or whatever you named it)
-- `VITE_ARTIFACT_BASE_ROOT = https://artifacts.plateau-tools.dev`
+- `VITE_ARTIFACT_BASE_ROOT = https://artifacts.plateau.yodolabs.jp`
   (the public URL of your artifacts origin; see "Artifact hosting" below)
 - `VITE_DEFAULT_CITY_SLUG = shibuya`
 
@@ -43,7 +43,7 @@ preview URL commented on it automatically.
 ### 4. Custom domain (optional)
 
 In the Cloudflare Pages dashboard for the project, **Custom domains → Set up
-a custom domain**, e.g. `risk-lens.plateau-tools.dev`. The DNS record is added
+a custom domain**, e.g. `risk-lens.plateau.yodolabs.jp`. The DNS record is added
 automatically if the domain's zone is in the same account.
 
 ## Data layer overview
@@ -114,7 +114,7 @@ for city in shibuya edogawa koto kamakura osaka; do
 done
 ```
 
-Bind a public hostname (e.g. `artifacts.plateau-tools.dev`) to the bucket in
+Bind a public hostname (e.g. `artifacts.plateau.yodolabs.jp`) to the bucket in
 the R2 dashboard, then set `VITE_ARTIFACT_BASE_ROOT` to that URL.
 
 R2 CORS rule (`r2-cors.json`):
@@ -122,7 +122,7 @@ R2 CORS rule (`r2-cors.json`):
 ```json
 [
   {
-    "AllowedOrigins": ["https://risk-lens.plateau-tools.dev"],
+    "AllowedOrigins": ["https://risk-lens.plateau.yodolabs.jp"],
     "AllowedMethods": ["GET", "HEAD"],
     "AllowedHeaders": ["Range"],
     "ExposeHeaders": ["Content-Range", "Accept-Ranges", "Content-Length", "ETag"],
@@ -139,7 +139,7 @@ npx wrangler r2 bucket cors put plateau-artifacts --file r2-cors.json
 
 ```sh
 # CORS + Range on artifacts:
-curl -I -H "Range: bytes=0-100" https://artifacts.plateau-tools.dev/shibuya/buildings.pmtiles
+curl -I -H "Range: bytes=0-100" https://artifacts.plateau.yodolabs.jp/shibuya/buildings.pmtiles
 # Expect:
 #   HTTP/2 206
 #   accept-ranges: bytes

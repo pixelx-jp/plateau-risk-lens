@@ -64,7 +64,7 @@ npm run dev   # → http://localhost:5173
 
 | 方式 | こんなときに | コマンド |
 |---|---|---|
-| **本番オリジン直結** | とりあえず動かしたい | `echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau-tools.dev' > .env.local` |
+| **本番オリジン直結** | とりあえず動かしたい | `echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau.yodolabs.jp' > .env.local` |
 | **ローカルにダウンロード** | オフライン作業 / 高速 dev | `scripts/fetch-artifacts.sh shibuya edogawa kamakura` |
 | **plateau-core を sibling clone** | plateau-core 開発中 | このリポジトリの隣に `plateau-core/` を置く |
 

@@ -31,5 +31,5 @@ Next steps:
   2. If artifacts live on a separate origin (R2 / S3), confirm CORS headers:
        access-control-allow-origin: *
        accept-ranges: bytes
-  3. Set the custom domain (risk-lens.plateau-tools.dev) in the Cloudflare Pages dashboard.
+  3. Set the custom domain (risk-lens.plateau.yodolabs.jp) in the Cloudflare Pages dashboard.
 EOF

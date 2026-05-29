@@ -65,7 +65,7 @@ You also need hazard data. Pick one path:
 
 | Path | When to use | How |
 |---|---|---|
-| **Live origin** | Just want to see the app run | `echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau-tools.dev' > .env.local` |
+| **Live origin** | Just want to see the app run | `echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau.yodolabs.jp' > .env.local` |
 | **Fetch bundles** | Want a few cities locally for offline / fast dev | `scripts/fetch-artifacts.sh shibuya edogawa kamakura` |
 | **Sibling clone** | Already working on plateau-core | sibling-checkout `plateau-core/` next to this repo |
 

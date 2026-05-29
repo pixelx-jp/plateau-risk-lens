@@ -15,7 +15,7 @@
 #
 # Why download at all? You don't have to. Two alternatives:
 #   - Point the dev server at a hosted artifact origin via
-#     VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau-tools.dev (zero local
+#     VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau.yodolabs.jp (zero local
 #     storage). See README.md.
 #   - Or sibling-clone plateau-core; the dev middleware reads ../plateau-core
 #     directly. See README.md.

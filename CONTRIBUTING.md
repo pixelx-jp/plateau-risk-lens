@@ -37,7 +37,7 @@ npm install
 # Dev server reads from ../plateau-core/out_<slug>/ via a Vite middleware.
 # If you have plateau-core checked out as a sibling, you're done.
 # Otherwise point at a hosted artifact origin:
-echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau-tools.dev' > .env.local
+echo 'VITE_ARTIFACT_BASE_ROOT=https://artifacts.plateau.yodolabs.jp' > .env.local
 
 npm run dev
 ```
