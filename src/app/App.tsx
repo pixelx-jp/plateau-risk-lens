@@ -188,13 +188,13 @@ export function App() {
                       onClick={() => setHeaderOpen(false)}
                       aria-label="Close controls"
                       style={{
-                        width: 32,
-                        height: 32,
+                        width: 44,
+                        height: 44,
                         borderRadius: 6,
                         border: "1px solid #DDD",
                         background: "transparent",
                         cursor: "pointer",
-                        fontSize: 18,
+                        fontSize: 22,
                         color: "#555",
                       }}
                     >
@@ -215,7 +215,7 @@ export function App() {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  minHeight: 36,
+                  minHeight: isMobile ? 44 : 36,
                   cursor: "pointer",
                 }}
               >
@@ -223,7 +223,7 @@ export function App() {
                   type="checkbox"
                   checked={woodenPre1981}
                   onChange={(e) => setWoodenPre1981(e.target.checked)}
-                  style={{ width: 18, height: 18 }}
+                  style={{ width: isMobile ? 22 : 18, height: isMobile ? 22 : 18 }}
                 />
                 <span>{i18n.t("controls.wooden_pre1981")}</span>
               </label>

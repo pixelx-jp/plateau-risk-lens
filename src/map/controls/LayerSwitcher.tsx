@@ -1,5 +1,6 @@
 import { HAZARD_KEYS, type HazardKey } from "@/types/hazard";
 import { useAppStore } from "@/app/store/useAppStore";
+import { MOBILE_QUERY, useMediaQuery } from "@/utils/useMediaQuery";
 import type { ManifestRegistry } from "@/manifest/ManifestRegistry";
 import type { I18n } from "@/i18n/I18n";
 
@@ -18,6 +19,7 @@ function hasCoverage(manifest: ManifestRegistry, key: HazardKey): boolean {
 export function LayerSwitcher({ i18n, manifest }: Props) {
   const active = useAppStore((s) => s.activeHazards);
   const toggle = useAppStore((s) => s.toggleHazard);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   return (
     <fieldset
@@ -44,6 +46,7 @@ export function LayerSwitcher({ i18n, manifest }: Props) {
               display: "flex",
               alignItems: "center",
               gap: 6,
+              minHeight: isMobile ? 44 : undefined,
               cursor: covered ? "pointer" : "not-allowed",
               opacity: covered ? 1 : 0.45,
             }}
@@ -53,6 +56,7 @@ export function LayerSwitcher({ i18n, manifest }: Props) {
               checked={active.includes(key)}
               disabled={!covered}
               onChange={() => toggle(key)}
+              style={isMobile ? { width: 22, height: 22 } : undefined}
             />
             <span>{i18n.hazardLabel(key)}</span>
             {!covered && (

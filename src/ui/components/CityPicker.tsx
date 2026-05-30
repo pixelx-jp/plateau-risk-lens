@@ -1,5 +1,6 @@
 import { groupedCities, REGION_LABELS, findCityBySlug } from "@/app/cities";
 import { useAppStore } from "@/app/store/useAppStore";
+import { MOBILE_QUERY, useMediaQuery } from "@/utils/useMediaQuery";
 import { useMemo } from "react";
 
 interface Props {
@@ -11,6 +12,7 @@ export function CityPicker({ onChangeCity, currentSlug }: Props) {
   const locale = useAppStore((s) => s.locale);
   const setCityCode = useAppStore((s) => s.setCityCode);
   const groups = useMemo(() => groupedCities(), []);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   return (
     <select
@@ -23,12 +25,13 @@ export function CityPicker({ onChangeCity, currentSlug }: Props) {
         onChangeCity(city.slug, city.cityCode);
       }}
       style={{
-        padding: "6px 8px",
-        fontSize: 13,
+        padding: isMobile ? "8px 10px" : "6px 8px",
+        // 16px avoids iOS focus-zoom; 44px meets the touch-target minimum
+        fontSize: isMobile ? 16 : 13,
         border: "1px solid #BBB",
         borderRadius: 4,
         background: "white",
-        minHeight: 36,
+        minHeight: isMobile ? 44 : 36,
       }}
     >
       {groups.map(({ region, cities }) => (

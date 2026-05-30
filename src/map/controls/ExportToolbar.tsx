@@ -4,6 +4,7 @@ import type { ManifestRegistry } from "@/manifest/ManifestRegistry";
 import type { MapStageHandle } from "@/map/MapStage";
 import { downloadBlob } from "@/utils/download";
 import { useAppStore } from "@/app/store/useAppStore";
+import { MOBILE_QUERY, useMediaQuery } from "@/utils/useMediaQuery";
 
 interface Props {
   i18n: I18n;
@@ -16,6 +17,7 @@ export function ExportToolbar({ i18n, manifest, mapRef, fgbDirectoryUrl }: Props
   const activeHazards = useAppStore((s) => s.activeHazards);
   const setExportStatus = useAppStore((s) => s.setExportStatus);
   const exportStatus = useAppStore((s) => s.exportStatus);
+  const isMobile = useMediaQuery(MOBILE_QUERY);
 
   const onPng = useCallback(async () => {
     const stage = mapRef.current;
@@ -86,10 +88,10 @@ export function ExportToolbar({ i18n, manifest, mapRef, fgbDirectoryUrl }: Props
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <button onClick={onPng} style={buttonStyle}>
+      <button onClick={onPng} style={isMobile ? mobileButtonStyle : buttonStyle}>
         {i18n.t("controls.export_png")}
       </button>
-      <button onClick={onGeoJson} style={buttonStyle}>
+      <button onClick={onGeoJson} style={isMobile ? mobileButtonStyle : buttonStyle}>
         {i18n.t("controls.export_geojson")}
       </button>
       <ExportStatusLine status={exportStatus} />
@@ -105,6 +107,12 @@ const buttonStyle: React.CSSProperties = {
   borderRadius: 4,
   cursor: "pointer",
   fontSize: 12,
+};
+
+const mobileButtonStyle: React.CSSProperties = {
+  ...buttonStyle,
+  minHeight: 44,
+  fontSize: 15,
 };
 
 function ExportStatusLine({

@@ -79,8 +79,15 @@ export function PropertyCard({ feature, manifest, i18n, isMobile = false, onClos
             background: "transparent",
             border: 0,
             cursor: "pointer",
-            fontSize: 18,
+            fontSize: isMobile ? 24 : 18,
             color: "#888",
+            // 44px touch target on mobile; negative margin keeps the header tidy
+            minWidth: isMobile ? 44 : undefined,
+            minHeight: isMobile ? 44 : undefined,
+            margin: isMobile ? -8 : 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           ×
