@@ -24,7 +24,10 @@
 
 set -euo pipefail
 
-INDEX_URL="${PLATEAU_DISTRIBUTION_INDEX:-https://github.com/pixelx-jp/plateau-bridge/releases/download/data-v1/index.json}"
+# Index lives in the repo (not as a release asset), so read it raw from main —
+# always fresh, single source of truth, and the same URL plateau-creative-mcp
+# uses. The bundle_url in each entry still points at the data-v1 release assets.
+INDEX_URL="${PLATEAU_DISTRIBUTION_INDEX:-https://raw.githubusercontent.com/pixelx-jp/plateau-bridge/main/distribution/index.json}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # Artifacts are extracted *outside* the SPA's publicDir so that the
 # production build doesn't bundle them. The Vite dev middleware reads from
