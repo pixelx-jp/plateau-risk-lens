@@ -64,3 +64,6 @@ yarn-error.log*
 
 # Wrangler local state (Cloudflare CLI)
 .wrangler
+
+# local e2e journey screenshots
+e2e/.journey/

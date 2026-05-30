@@ -56,19 +56,19 @@ export const CITIES: CityEntry[] = [
 
   // Kanto (outside Tokyo 23)
   { cityCode: "14204", slug: "kamakura", label: "Kamakura", labelJa: "鎌倉市", region: "kanto", center: [139.5510, 35.3192], zoom: 13 },
-  { cityCode: "14100", slug: "yokohama", label: "Yokohama", labelJa: "横浜市", region: "kanto", center: [139.6380, 35.4437], zoom: 11 },
+  { cityCode: "14100", slug: "yokohama", label: "Yokohama", labelJa: "横浜市", region: "kanto", center: [139.6380, 35.4437], zoom: 12 },
 
   // Kansai
-  { cityCode: "27100", slug: "osaka", label: "Osaka", labelJa: "大阪市", region: "kansai", center: [135.5023, 34.6937], zoom: 11 },
+  { cityCode: "27100", slug: "osaka", label: "Osaka", labelJa: "大阪市", region: "kansai", center: [135.5023, 34.6937], zoom: 12 },
 
   // Chubu
-  { cityCode: "23100", slug: "nagoya", label: "Nagoya", labelJa: "名古屋市", region: "chubu", center: [136.9066, 35.1815], zoom: 11 },
+  { cityCode: "23100", slug: "nagoya", label: "Nagoya", labelJa: "名古屋市", region: "chubu", center: [136.9066, 35.1815], zoom: 12 },
 
   // Kyushu
-  { cityCode: "40130", slug: "fukuoka", label: "Fukuoka", labelJa: "福岡市", region: "kyushu", center: [130.4017, 33.5902], zoom: 11 },
+  { cityCode: "40130", slug: "fukuoka", label: "Fukuoka", labelJa: "福岡市", region: "kyushu", center: [130.4017, 33.5902], zoom: 12 },
 
   // Hokkaido
-  { cityCode: "01100", slug: "sapporo", label: "Sapporo", labelJa: "札幌市", region: "hokkaido", center: [141.3545, 43.0618], zoom: 11 },
+  { cityCode: "01100", slug: "sapporo", label: "Sapporo", labelJa: "札幌市", region: "hokkaido", center: [141.3545, 43.0618], zoom: 12 },
 ];
 
 export function findCity(cityCode: string): CityEntry | null {
