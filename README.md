@@ -23,6 +23,15 @@
   <a href="./README.ja.md">日本語版 README →</a>
 </p>
 
+<p align="center">
+  <a href="https://risk-lens.plateau.yodolabs.jp">
+    <img src="docs/assets/screenshots/sapporo.png" width="100%"
+         alt="Sapporo rendered in plateau-risk-lens: every building shaded by river-flood depth. Green = surveyed and safe, grey diagonal hatch = no survey data (never shown as safe), yellow→orange→red→purple = increasing flood depth." />
+  </a>
+  <br/>
+  <sub>Sapporo — 646,431 buildings, each shaded by river-flood depth. Surveyed-and-safe stays green; <strong>no-data stays grey-hatched, never green</strong>. Static analysis of official PLATEAU hazard maps — not real-time forecasting.</sub>
+</p>
+
 ---
 
 A pure-client 2D MapLibre app that overlays PLATEAU hazard zones — river
@@ -105,6 +114,25 @@ Bundle: ~357 KB initial gzip; export modules lazy-loaded.
 [plateau-core](https://github.com/pixelx-jp/plateau-bridge) and served from the
 production artifacts origin. Adding a city: see
 [CONTRIBUTING.md](./CONTRIBUTING.md#adding-a-city).
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <img src="docs/assets/screenshots/osaka.png" width="100%" alt="Osaka in dark mode — river-flood depth from blue through red to purple across the delta, with safe and no-data buildings receding into the dark base map." /><br/>
+      <sub><strong>Osaka</strong> · dark mode · river-flood depth ramp</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/screenshots/yokohama.png" width="100%" alt="Yokohama — coastal river-flood exposure shaded yellow to red along the low-lying riverside, surveyed-safe buildings green, no-data grey-hatched." /><br/>
+      <sub><strong>Yokohama</strong> · coastal river-flood exposure</sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="docs/assets/screenshots/nagoya.png" width="100%" alt="Nagoya — river-flood depth per building over the city grid, green safe zones beside red high-depth corridors." /><br/>
+      <sub><strong>Nagoya</strong> · per-building flood depth</sub>
+    </td>
+  </tr>
+</table>
+
+<sub>Same three-state honesty everywhere: green only where the data says *surveyed and safe*, grey hatch for *no survey data*, depth ramp where there's a measured depth. Toggle layers and export PNG / GeoJSON in the <a href="https://risk-lens.plateau.yodolabs.jp">live demo</a>.</sub>
 
 ## License & attribution
 
