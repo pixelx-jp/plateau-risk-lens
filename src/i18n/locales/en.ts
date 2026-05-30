@@ -32,6 +32,7 @@ export const en = {
   "controls.layers": "Hazard layers",
   "controls.opacity": "Layer opacity",
   "controls.wooden_pre1981": "Highlight wooden pre-1981",
+  "controls.no_survey_data": "No survey data for this city",
   "controls.export_png": "Export PNG",
   "controls.export_geojson": "Export GeoJSON (bbox)",
   "controls.language": "言語 / Language",

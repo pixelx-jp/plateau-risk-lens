@@ -34,6 +34,7 @@ export const ja: Record<MessageKey, string> = {
   "controls.layers": "災害レイヤー",
   "controls.opacity": "レイヤー透明度",
   "controls.wooden_pre1981": "木造・旧耐震を強調",
+  "controls.no_survey_data": "この都市の調査データはありません",
   "controls.export_png": "PNG 書き出し",
   "controls.export_geojson": "GeoJSON 書き出し (bbox)",
   "controls.language": "言語 / Language",

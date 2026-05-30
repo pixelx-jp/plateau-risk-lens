@@ -13,6 +13,7 @@ import { CityPicker } from "@/ui/components/CityPicker";
 import { CITIES, findCity } from "./cities";
 import { useAppStore } from "./store/useAppStore";
 import { I18n } from "@/i18n/I18n";
+import type { HazardKey } from "@/types/hazard";
 import { MOBILE_QUERY, useMediaQuery } from "@/utils/useMediaQuery";
 
 const ARTIFACT_BASE_ROOT =
@@ -28,6 +29,8 @@ export function App() {
   const setWoodenPre1981 = useAppStore((s) => s.setWoodenPre1981);
   const selectedFeature = useAppStore((s) => s.selectedFeature);
   const setSelectedFeature = useAppStore((s) => s.setSelectedFeature);
+  const activeHazards = useAppStore((s) => s.activeHazards);
+  const setActiveHazards = useAppStore((s) => s.setActiveHazards);
 
   const i18n = useMemo(() => new I18n(locale), [locale]);
   const isMobile = useMediaQuery(MOBILE_QUERY);
@@ -69,6 +72,18 @@ export function App() {
     const c = findCity(cityCode);
     if (c && c.slug !== slug) setSlug(c.slug);
   }, [cityCode, slug]);
+
+  // When the city (manifest) changes, drop any active hazard with zero
+  // surveyed buildings here — otherwise the map blanks to all no-data grey.
+  // river_flood is covered in every published city, so it's a safe fallback.
+  useEffect(() => {
+    if (!manifest) return;
+    const covered = activeHazards.filter(
+      (k) => (manifest.getHazardStats(k)?.covered_count ?? 0) > 0,
+    );
+    const next: HazardKey[] = covered.length > 0 ? covered : ["river_flood"];
+    if (next.length !== activeHazards.length) setActiveHazards(next);
+  }, [manifest, activeHazards, setActiveHazards]);
 
   // Auto-collapse the header when crossing into mobile; auto-expand on desktop.
   useEffect(() => {
@@ -193,7 +208,7 @@ export function App() {
                 currentSlug={slug}
                 onChangeCity={(nextSlug) => setSlug(nextSlug)}
               />
-              <LayerSwitcher i18n={i18n} />
+              <LayerSwitcher i18n={i18n} manifest={manifest} />
               <OpacitySlider i18n={i18n} />
               <label
                 style={{
