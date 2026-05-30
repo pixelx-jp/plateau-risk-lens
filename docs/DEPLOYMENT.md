@@ -101,14 +101,18 @@ npx wrangler r2 bucket create plateau-artifacts
 # every ward. Idempotent.
 npx tsx scripts/inject-fgb-index.ts ../plateau-core
 
-# Upload each city
+# Upload each city.
+# NOTE: `--remote` is REQUIRED. Without it, wrangler 4.x writes `r2 object put`
+# to the LOCAL miniflare simulation (.wrangler/state), not the real bucket —
+# the put "succeeds" and `r2 object get` reads it back, but the production
+# origin keeps returning 404. Always pass --remote for real uploads.
 for city in shibuya edogawa koto kamakura osaka; do
-  npx wrangler r2 object put plateau-artifacts/${city}/manifest.json \
+  npx wrangler r2 object put plateau-artifacts/${city}/manifest.json --remote \
     --file ../plateau-core/out_${city}/manifest.json
-  npx wrangler r2 object put plateau-artifacts/${city}/buildings.pmtiles \
+  npx wrangler r2 object put plateau-artifacts/${city}/buildings.pmtiles --remote \
     --file ../plateau-core/out_${city}/buildings.pmtiles
   for fgb in ../plateau-core/out_${city}/buildings/*.fgb; do
-    npx wrangler r2 object put \
+    npx wrangler r2 object put --remote \
       plateau-artifacts/${city}/buildings/$(basename $fgb) --file $fgb
   done
 done

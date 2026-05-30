@@ -100,10 +100,10 @@ Bundle: ~357 KB initial gzip; export modules lazy-loaded.
 
 ## Supported cities
 
-24 cities — all 23 Tokyo wards plus Kamakura. Additional cities
-(Yokohama, Osaka, Nagoya, Fukuoka, Sapporo) are produced by
-[plateau-core](https://github.com/pixelx-jp/plateau-bridge) and will
-be added to the production origin over time. Adding a city: see
+29 cities — all 23 Tokyo wards, Kamakura, plus the 5 major regional metros
+(Yokohama, Osaka, Nagoya, Fukuoka, Sapporo). All are built by
+[plateau-core](https://github.com/pixelx-jp/plateau-bridge) and served from the
+production artifacts origin. Adding a city: see
 [CONTRIBUTING.md](./CONTRIBUTING.md#adding-a-city).
 
 ## License & attribution
