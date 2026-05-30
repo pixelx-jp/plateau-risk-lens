@@ -19,6 +19,17 @@ const NEW_CITIES = [
   { slug: "sapporo", label: "Sapporo" },
 ];
 
+// This suite only makes sense against the deployed origin (it asserts pmtiles
+// load from R2). The default CI e2e runs the local dev server with no artifacts,
+// so the map never paints there — skip unless E2E_BASE_URL targets production.
+const RUNS_AGAINST_PROD = (process.env.E2E_BASE_URL ?? "").includes(
+  "risk-lens.plateau.yodolabs.jp",
+);
+test.skip(
+  !RUNS_AGAINST_PROD,
+  "live-only journey — run with E2E_BASE_URL=https://risk-lens.plateau.yodolabs.jp",
+);
+
 test("picker exposes all 29 cities incl. the 5 new metros", async ({ page }) => {
   await page.goto("/");
   await page.locator("canvas.maplibregl-canvas").waitFor({ state: "visible", timeout: 30_000 });
