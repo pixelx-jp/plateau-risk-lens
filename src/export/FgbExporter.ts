@@ -43,21 +43,36 @@ export class FgbExporter {
     const sourceIds = new Set<string>();
     const filesUsed: string[] = [];
 
-    for (const file of fgbFiles) {
-      const url = `${this.fgbDirectoryUrl}/${file}`;
-      let touched = false;
-      const iter = deserialize(url, {
-        minX,
-        minY,
-        maxX,
-        maxY,
-      }) as AsyncIterable<GeoJSON.Feature>;
+    // Stream + bbox-filter every FGB file in parallel — each is an independent
+    // network-bound range scan, so a city split across multiple files (Osaka,
+    // Yokohama, …) no longer pays the sum of their fetch times serially.
+    const perFile = await Promise.all(
+      fgbFiles.map(async (file) => {
+        const url = `${this.fgbDirectoryUrl}/${file}`;
+        const iter = deserialize(url, {
+          minX,
+          minY,
+          maxX,
+          maxY,
+        }) as AsyncIterable<GeoJSON.Feature>;
+        const collected: GeoJSON.Feature[] = [];
+        for await (const feature of iter) {
+          if (!feature || !feature.properties) continue;
+          if (!featureIntersectsBbox(feature, input.bbox)) continue;
+          const uid = feature.properties["building_uid"];
+          if (typeof uid !== "string") continue;
+          collected.push(feature);
+        }
+        return { file, collected };
+      }),
+    );
 
-      for await (const feature of iter) {
-        if (!feature || !feature.properties) continue;
-        if (!featureIntersectsBbox(feature, input.bbox)) continue;
-        const uid = feature.properties["building_uid"];
-        if (typeof uid !== "string") continue;
+    // Merge sequentially in declared file order so cross-file dedup stays
+    // deterministic (first file that contains a building_uid wins).
+    for (const { file, collected } of perFile) {
+      let touched = false;
+      for (const feature of collected) {
+        const uid = feature.properties!["building_uid"] as string;
         if (seen.has(uid)) continue;
         seen.add(uid);
         collectSourceIds(feature.properties, input.selectedHazards, sourceIds);

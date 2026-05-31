@@ -1,7 +1,7 @@
 import type maplibregl from "maplibre-gl";
 import { HAZARD_KEYS, type HazardKey } from "@/types/hazard";
 import type { ManifestRegistry } from "@/manifest/ManifestRegistry";
-import { classifyHazard, extractHazardField } from "@/hazard/hazardClassification";
+import { classifyHazardFromProps } from "@/hazard/hazardClassification";
 import type { FeatureProps } from "@/types/feature";
 
 export interface CityCoverageSnapshot {
@@ -79,8 +79,7 @@ export class CoverageMeter {
       // the bucketing logic here and it drifted: missing confidence was
       // counted as "covered" while the map painted it as low_confidence.)
       for (const key of HAZARD_KEYS) {
-        const field = extractHazardField(props, key);
-        const kind = classifyHazard(field);
+        const kind = classifyHazardFromProps(props, key);
         if (kind === "no_data") perHazard[key].noData += 1;
         else if (kind === "low_confidence") perHazard[key].lowConfidence += 1;
         else perHazard[key].covered += 1;

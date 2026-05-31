@@ -96,6 +96,45 @@ export function classifyHazard(field: HazardField): HazardStatusKind {
   return "safe";
 }
 
+/**
+ * Classify a building's hazard status reading ONLY the fields `classifyHazard`
+ * actually uses — deliberately skipping the two `parseSourceIds` regex splits
+ * that `extractHazardField` performs for the property card. The viewport
+ * coverage meter runs this over thousands of buildings × every hazard on each
+ * map move and never touches the source-id lists, so parsing them there is pure
+ * waste. Reuses `classifyHazard` so the verdict logic stays single-sourced.
+ */
+export function classifyHazardFromProps(
+  props: FeatureProps,
+  key: HazardKey,
+): HazardStatusKind {
+  const covered = normalizeBool(props[`${key}_covered` as keyof FeatureProps]) ?? false;
+  const rawConfidence = props[`${key}_coverage_confidence` as keyof FeatureProps];
+  const coverageConfidence =
+    rawConfidence === undefined
+      ? undefined
+      : (rawConfidence as CoverageConfidence | null);
+
+  let depthMax: number | null = null;
+  let inZone: boolean | null = null;
+  if (HAZARD_USES_IN_ZONE[key]) {
+    inZone = normalizeBool(props[`${key}_in_zone` as keyof FeatureProps]);
+  } else {
+    const raw = props[`${key}_depth_max` as keyof FeatureProps];
+    if (typeof raw === "number" && Number.isFinite(raw)) depthMax = raw;
+  }
+
+  return classifyHazard({
+    key,
+    covered,
+    coverageConfidence,
+    depthMax,
+    inZone,
+    coverageSourceIds: [],
+    hitSourceIds: [],
+  });
+}
+
 export function toHazardStatus(props: FeatureProps, key: HazardKey): HazardStatus {
   const field = extractHazardField(props, key);
   return {

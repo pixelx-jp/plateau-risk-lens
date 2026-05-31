@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { classifyHazard, extractHazardField, toHazardStatus } from "@/hazard/hazardClassification";
+import {
+  classifyHazard,
+  classifyHazardFromProps,
+  extractHazardField,
+  toHazardStatus,
+} from "@/hazard/hazardClassification";
+import { HAZARD_KEYS } from "@/types/hazard";
 import type { FeatureProps } from "@/types/feature";
 
 const empty: FeatureProps = { building_uid: "x" };
@@ -163,4 +169,49 @@ describe("classifyHazard — honesty invariants", () => {
     expect(status.hitSourceIds).toEqual(["src1"]);
     expect(status.kind).toBe("risk_depth");
   });
+});
+
+describe("classifyHazardFromProps — parity with the canonical path", () => {
+  // The viewport coverage meter uses classifyHazardFromProps (which skips the
+  // two parseSourceIds regex splits) instead of classifyHazard(extractHazardField).
+  // It MUST produce the identical verdict for every input, or the badge drifts
+  // from the painted map. Exhaustively cross-check the two paths.
+  const coveredValues = [undefined, false, true, 0, 1, "0", "1", "true", "false"] as const;
+  const confidenceValues = [
+    undefined,
+    null,
+    "explicit_polygon",
+    "declared_full_admin",
+    "inundation_bounded",
+    "unknown",
+    "typo_value",
+  ] as const;
+  const depthOrZoneValues = [undefined, null, 0, 1.5, -1, true, false] as const;
+
+  for (const key of HAZARD_KEYS) {
+    it(`matches canonical classifyHazard for every input (${key})`, () => {
+      for (const covered of coveredValues) {
+        for (const conf of confidenceValues) {
+          for (const dz of depthOrZoneValues) {
+            const raw: Record<string, unknown> = { building_uid: "x" };
+            if (covered !== undefined) raw[`${key}_covered`] = covered;
+            if (conf !== undefined) raw[`${key}_coverage_confidence`] = conf;
+            // Set both depth_max and in_zone from the same fixture value; the
+            // extractor reads only whichever applies to this hazard.
+            if (dz !== undefined) {
+              raw[`${key}_depth_max`] = dz;
+              raw[`${key}_in_zone`] = dz;
+            }
+            const props = raw as unknown as FeatureProps;
+            const fast = classifyHazardFromProps(props, key);
+            const canonical = classifyHazard(extractHazardField(props, key));
+            expect(
+              fast,
+              `mismatch for ${key} covered=${String(covered)} conf=${String(conf)} dz=${String(dz)}`,
+            ).toBe(canonical);
+          }
+        }
+      }
+    });
+  }
 });

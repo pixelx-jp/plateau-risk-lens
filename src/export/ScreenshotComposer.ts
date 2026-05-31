@@ -19,17 +19,6 @@ export class ScreenshotComposer {
     const width = mapCanvas.width;
     const height = mapCanvas.height;
 
-    // Sanity check: surface CORS taint up-front, before allocating the final
-    // canvas. The thrown DOMException would otherwise hide deeper in toBlob.
-    try {
-      mapCanvas.toDataURL("image/png");
-    } catch (err) {
-      throw new ScreenshotError(
-        "Map canvas is CORS-tainted. Ensure all tile hosts return Access-Control-Allow-Origin: *.",
-        err,
-      );
-    }
-
     const final = document.createElement("canvas");
     final.width = width;
     final.height = height;
@@ -37,6 +26,21 @@ export class ScreenshotComposer {
     if (!ctx) throw new ScreenshotError("2D context unavailable");
 
     ctx.drawImage(mapCanvas, 0, 0);
+
+    // Surface CORS taint up-front. Drawing a tainted source clears the 2D
+    // canvas's origin-clean flag, so a single-pixel getImageData throws the
+    // SecurityError here — far cheaper than encoding the entire map to a PNG
+    // data URL just to probe (the previous approach), and it reuses the canvas
+    // we already drew into.
+    try {
+      ctx.getImageData(0, 0, 1, 1);
+    } catch (err) {
+      throw new ScreenshotError(
+        "Map canvas is CORS-tainted. Ensure all tile hosts return Access-Control-Allow-Origin: *.",
+        err,
+      );
+    }
+
     drawOverlay(ctx, width, height, overlay, pixelRatio);
 
     return await new Promise<Blob>((resolve, reject) => {
